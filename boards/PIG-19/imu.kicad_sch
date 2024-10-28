@@ -1710,6 +1710,12 @@
 		(uuid "5222d745-a105-4135-b06c-3291fb097b05")
 	)
 	(junction
+		(at 218.44 139.7)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "62812fc0-054d-469e-a5a7-2abf299a9541")
+	)
+	(junction
 		(at 170.18 105.41)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1816,6 +1822,16 @@
 			(type default)
 		)
 		(uuid "342c3015-e91b-4a2e-9b8e-34f48302b57c")
+	)
+	(wire
+		(pts
+			(xy 218.44 139.7) (xy 218.44 137.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3f6ff5ce-0d3f-4fd9-9d57-b14cf2ccccb8")
 	)
 	(wire
 		(pts
@@ -1959,6 +1975,16 @@
 	)
 	(wire
 		(pts
+			(xy 208.28 154.94) (xy 220.98 154.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "88a5fdcd-565a-4d99-832d-686d1d4be73f")
+	)
+	(wire
+		(pts
 			(xy 172.72 105.41) (xy 184.15 105.41)
 		)
 		(stroke
@@ -1986,6 +2012,36 @@
 			(type default)
 		)
 		(uuid "9b61435b-491e-40c2-a017-296e0ccb00ac")
+	)
+	(wire
+		(pts
+			(xy 208.28 152.4) (xy 215.9 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9e56cd82-62eb-4f72-a3cd-c2f8b74c07e6")
+	)
+	(wire
+		(pts
+			(xy 220.98 139.7) (xy 220.98 140.97)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9ab625a-441f-4006-91b3-4f3652775d6d")
+	)
+	(wire
+		(pts
+			(xy 220.98 148.59) (xy 220.98 154.94)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aa45f5e0-20be-4a35-a90a-c99af44ea41a")
 	)
 	(wire
 		(pts
@@ -2019,6 +2075,16 @@
 	)
 	(wire
 		(pts
+			(xy 215.9 140.97) (xy 215.9 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b8175f7b-cfb6-4ba4-a5c8-d01d4dfbfb1b")
+	)
+	(wire
+		(pts
 			(xy 172.72 81.28) (xy 172.72 92.71)
 		)
 		(stroke
@@ -2046,6 +2112,16 @@
 			(type default)
 		)
 		(uuid "c6ada2c9-4556-438f-af71-b7e884a1f581")
+	)
+	(wire
+		(pts
+			(xy 215.9 139.7) (xy 218.44 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d1c39fc8-b543-4f72-845b-4112299dd3fa")
 	)
 	(wire
 		(pts
@@ -2089,6 +2165,16 @@
 	)
 	(wire
 		(pts
+			(xy 215.9 148.59) (xy 215.9 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e5bcafe1-b3a8-45d9-bad0-5348dcc09e25")
+	)
+	(wire
+		(pts
 			(xy 161.29 154.94) (xy 165.1 154.94)
 		)
 		(stroke
@@ -2096,6 +2182,35 @@
 			(type default)
 		)
 		(uuid "f38666c8-733d-4510-9711-4749badbe2c8")
+	)
+	(wire
+		(pts
+			(xy 218.44 139.7) (xy 220.98 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6812d3a-6c20-4231-aa9e-bc1f946015f3")
+	)
+	(text_box "I2C Configuration\n"
+		(exclude_from_sim no)
+		(at 176.53 130.81 0)
+		(size 78.74 31.75)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "62d467e7-28c9-41d4-9b5c-485ebbe981b0")
 	)
 	(text_box "IMU Rescue Headers - Ask about inclusion of this\n\n"
 		(exclude_from_sim no)
@@ -2135,13 +2250,14 @@
 		)
 		(uuid "f242df76-f209-48a1-936a-1a320ce38208")
 	)
-	(text "alex if u wanna use bno feel free to add here! \nmaybe we can have both sensors? i like lsm also and wanna use it "
+	(text "Adin Q's\n- Page 87 Table 172, internal pull down resistors?\n"
 		(exclude_from_sim no)
-		(at 148.59 58.42 0)
+		(at 195.58 74.676 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
+			(justify left)
 		)
 		(uuid "1695d048-5c6c-4864-97e9-e782a2b88cc7")
 	)
@@ -2193,6 +2309,30 @@
 		)
 		(uuid "66002851-3d7c-4c29-b8e4-f2fb1517ec4b")
 	)
+	(hierarchical_label "SDA"
+		(shape input)
+		(at 208.28 154.94 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "6e92bc2a-acc7-4f4a-8a24-9218c3726910")
+	)
+	(hierarchical_label "SCL"
+		(shape input)
+		(at 208.28 152.4 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "880a4ec8-b044-4e15-8160-7613ce390b8c")
+	)
 	(hierarchical_label "INT1"
 		(shape input)
 		(at 161.29 110.49 0)
@@ -2216,6 +2356,129 @@
 			(justify left)
 		)
 		(uuid "94cdce2f-e99d-4075-8e53-10253c23733c")
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 215.9 144.78 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0432bc8f-5c37-41e3-ab86-5d05c9a87a7e")
+		(property "Reference" "R4"
+			(at 211.328 143.256 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 211.328 145.796 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 214.884 144.526 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" " 652-CRT0805AFY-1001E "
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "AVAILABILITY" ""
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "DESCRIPTION" ""
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PACKAGE" ""
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PRICE" ""
+			(at 215.9 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3a9492b6-786b-4adf-a2e2-f84d30718841")
+		)
+		(pin "2"
+			(uuid "f4e45165-d928-4f6f-965f-9d75f5f9900b")
+		)
+		(instances
+			(project "PIG-19"
+				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/06412f56-3d2a-46cd-b4d1-06d7ec975c02"
+					(reference "R4")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(symbol
 		(lib_id "power:GND")
@@ -2629,6 +2892,129 @@
 			(project "PIG-19"
 				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/06412f56-3d2a-46cd-b4d1-06d7ec975c02"
 					(reference "#PWR041")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R_US")
+		(at 220.98 144.78 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8535312c-01ff-47c6-95b4-41da607df7a6")
+		(property "Reference" "R10"
+			(at 227.584 143.002 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 226.822 146.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 219.964 144.526 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "MANUFACTURER" " 652-CRT0805AFY-1001E "
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "AVAILABILITY" ""
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "DESCRIPTION" ""
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PACKAGE" ""
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "PRICE" ""
+			(at 220.98 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5332414e-ed25-4bf7-82c9-bb719ae0de0d")
+		)
+		(pin "2"
+			(uuid "beff77b2-01a2-435d-bd3f-4c0ef68d3e2a")
+		)
+		(instances
+			(project "PIG-19"
+				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/06412f56-3d2a-46cd-b4d1-06d7ec975c02"
+					(reference "R10")
 					(unit 1)
 				)
 			)
@@ -3516,6 +3902,71 @@
 			(project "PIG-19"
 				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/06412f56-3d2a-46cd-b4d1-06d7ec975c02"
 					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3V3")
+		(at 218.44 137.16 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "fe215839-ac63-4f2d-a953-62b09ee2dddb")
+		(property "Reference" "#PWR051"
+			(at 218.44 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 223.266 135.636 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 218.44 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 218.44 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3V3\""
+			(at 218.44 137.16 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5c15d81c-a9f0-42c2-9cb7-4d7d8b7e7e2e")
+		)
+		(instances
+			(project "PIG-19"
+				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/06412f56-3d2a-46cd-b4d1-06d7ec975c02"
+					(reference "#PWR051")
 					(unit 1)
 				)
 			)
