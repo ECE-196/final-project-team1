@@ -2387,10 +2387,6 @@
 		(uuid "c0e40ce6-e345-472d-a456-678f164fcda3")
 	)
 	(no_connect
-		(at 85.09 69.85)
-		(uuid "c25f3fa4-a36b-4f47-9eb5-44688d011653")
-	)
-	(no_connect
 		(at 115.57 62.23)
 		(uuid "cfdf98f5-e93a-4130-b7b4-dafc5bf28e25")
 	)
@@ -2421,6 +2417,16 @@
 			(type default)
 		)
 		(uuid "0a21d43b-7893-45d4-8cac-7c9710ba2e5d")
+	)
+	(wire
+		(pts
+			(xy 242.57 90.17) (xy 237.49 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0c1f92c3-5921-4dca-acdd-1a9459d33529")
 	)
 	(wire
 		(pts
@@ -2804,6 +2810,16 @@
 	)
 	(wire
 		(pts
+			(xy 76.2 69.85) (xy 85.09 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bbbbaad7-f8c0-4112-9a05-63868d815bee")
+	)
+	(wire
+		(pts
 			(xy 125.73 48.26) (xy 128.27 48.26)
 		)
 		(stroke
@@ -3081,6 +3097,17 @@
 		)
 		(uuid "518397c9-f546-4c4e-aad4-f4d153fd6927")
 	)
+	(label "INT3"
+		(at 237.49 90.17 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "53f466a2-9d54-45a8-aabf-cf8bec0cb344")
+	)
 	(label "Batt_S"
 		(at 125.73 72.39 180)
 		(fields_autoplaced yes)
@@ -3157,6 +3184,17 @@
 			(justify left bottom)
 		)
 		(uuid "6dcb3b25-d5e3-4930-ab37-e1d9d9ec177c")
+	)
+	(label "INT3"
+		(at 76.2 69.85 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "710be245-c33a-40f2-9963-43f9aed7f72f")
 	)
 	(label "LED_S1"
 		(at 125.73 90.17 180)
@@ -5005,6 +5043,16 @@
 			)
 			(uuid "63f7625e-39a6-4ddb-bb88-a2383dcd5052")
 		)
+		(pin "INT3" input
+			(at 242.57 90.17 180)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+			(uuid "e44634c2-ff1e-45d5-b1d8-22d7b681df2e")
+		)
 		(instances
 			(project "PIG-19"
 				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e"
@@ -5256,7 +5304,7 @@
 		)
 	)
 	(sheet
-		(at 196.85 27.94)
+		(at 43.18 152.4)
 		(size 34.29 11.43)
 		(fields_autoplaced yes)
 		(stroke
@@ -5268,7 +5316,7 @@
 		)
 		(uuid "d8ad7a86-face-405a-a9e9-08704163367a")
 		(property "Sheetname" "Mounting"
-			(at 196.85 27.2284 0)
+			(at 43.18 151.6884 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5277,7 +5325,7 @@
 			)
 		)
 		(property "Sheetfile" "mounting.kicad_sch"
-			(at 196.85 39.9546 0)
+			(at 43.18 164.4146 0)
 			(effects
 				(font
 					(size 1.27 1.27)
