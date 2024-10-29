@@ -1163,7 +1163,7 @@
 		)
 		(uuid "fab40997-445e-4b75-b0f6-33e52dd199b4")
 	)
-	(text_box "Batt->5V, Iout max is 150mA, running 15 WS2812B LEDs at 50% is 370mA"
+	(text_box "Batt->5V, use a heatsink on this "
 		(exclude_from_sim no)
 		(at 20.32 66.04 0)
 		(size 72.39 35.56)
@@ -1344,7 +1344,7 @@
 		(at 116.84 81.28 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -1662,7 +1662,7 @@
 				(hide yes)
 			)
 		)
-		(property "MF" "Texas Instruments"
+		(property "MF" "LM2940S-5.0/NOPB"
 			(at 52.07 83.82 0)
 			(effects
 				(font
@@ -1757,10 +1757,6 @@
 		(instances
 			(project "PIG-19"
 				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/057bbe4c-afb7-4e9a-9365-c8d142221fbb"
-					(reference "U1")
-					(unit 1)
-				)
-				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/06412f56-3d2a-46cd-b4d1-06d7ec975c02"
 					(reference "U1")
 					(unit 1)
 				)

@@ -448,16 +448,6 @@
 		)
 		(uuid "fb64d60f-8b58-4e40-ae60-633d2ed9144a")
 	)
-	(text "increase volt divider resistance, currently ~4, desired 2.7 Vout"
-		(exclude_from_sim no)
-		(at 193.548 84.074 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "fa364b7d-a2b7-48f8-b4d5-bf5807bb5702")
-	)
 	(hierarchical_label "Batt_Sense"
 		(shape input)
 		(at 152.4 83.82 180)
@@ -489,7 +479,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "500k"
+		(property "Value" "530k"
 			(at 160.02 92.7099 0)
 			(effects
 				(font
@@ -517,15 +507,6 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 157.48 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" "AF0201FR-07499KL"
 			(at 157.48 91.44 0)
 			(effects
 				(font
@@ -634,7 +615,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "1M"
+		(property "Value" "470k"
 			(at 160.02 77.4699 0)
 			(effects
 				(font
@@ -662,15 +643,6 @@
 			)
 		)
 		(property "Description" "Resistor, US symbol"
-			(at 157.48 76.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "MANUFACTURER" " ERJ-U01F1004C "
 			(at 157.48 76.2 0)
 			(effects
 				(font
