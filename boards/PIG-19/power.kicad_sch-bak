@@ -3711,25 +3711,6 @@
 		)
 		(uuid "2b65bdd9-4069-4845-9f01-bca90ad500e9")
 	)
-	(text_box "ESCs: Con.Current is 35A\nMotors: Current Capacity 12A/60S \n	-  Max Efficiency Current: 4-10A (>75%)\nNo Load @ 10V :0.5A\n\nAssuming under small load (our robot) 1-3 amps @ max 8.4 volts"
-		(exclude_from_sim no)
-		(at 54.61 76.2 0)
-		(size 38.1 20.32)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(fill
-			(type none)
-		)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left top)
-		)
-		(uuid "51cd7992-0774-4f9d-8cf7-56078eacc634")
-	)
 	(text_box "Power Indicator LED"
 		(exclude_from_sim no)
 		(at 52.07 107.95 0)
@@ -3767,26 +3748,6 @@
 			(justify left top)
 		)
 		(uuid "a855b3c4-0585-4425-8ab6-c085eb489d2f")
-	)
-	(text "Recalc LED resistance\n"
-		(exclude_from_sim no)
-		(at 63.5 159.004 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "a9d7a662-3faa-4dbd-8d9f-80cbab7b573e")
-	)
-	(text "Ensure PMOS FET is able to handle max current draw possible for motors\n- rds_on * i^2 = power dissipation of FET"
-		(exclude_from_sim no)
-		(at 98.806 71.882 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "c0c6bace-3263-4183-902f-2c9be2fce328")
 	)
 	(text "USB C"
 		(exclude_from_sim no)
@@ -4198,7 +4159,7 @@
 		(at 64.77 54.61 0)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -5888,7 +5849,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+5V"
+		(property "Value" "+3V3"
 			(at 68.326 116.586 0)
 			(effects
 				(font
@@ -6593,7 +6554,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100"
+		(property "Value" "510"
 			(at 66.04 126.9999 0)
 			(effects
 				(font
@@ -6629,7 +6590,7 @@
 				(hide yes)
 			)
 		)
-		(property "MANUFACTURER" "ERJ-1RKD1000C"
+		(property "MANUFACTURER" "UP6F5110V"
 			(at 63.5 125.73 0)
 			(effects
 				(font
