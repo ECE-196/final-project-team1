@@ -2536,7 +2536,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 69.85) (xy 80.01 69.85)
+			(xy 85.09 69.85) (xy 76.2 69.85)
 		)
 		(stroke
 			(width 0)
@@ -3095,7 +3095,7 @@
 		(uuid "05328bf1-ffd5-47d1-87ce-2da2efb468e2")
 	)
 	(label "INT3"
-		(at 80.01 69.85 0)
+		(at 76.2 69.85 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
