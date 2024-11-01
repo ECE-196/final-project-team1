@@ -1,0 +1,6 @@
+"Reference","Value","Datasheet","Qty","DNP","MANUFACTURER"
+"C1,C2,C3,C4","0.1uF","~","4","","KAF15AR71H104KM"
+"R1,R2,R5","10k","~","3","","RN73C1J10KBTD"
+"R3,R4","4.7k","~","2","","TNPU06034K70AYEN00"
+"R6,R7","2.2k","~","2","","CPF0603B2K2E1"
+"U1","BNO085","BNO085","1","","BNO085"
