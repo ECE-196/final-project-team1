@@ -977,7 +977,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f4b5f982-1417-4b28-b5bc-23ef96fa1d8c")
-		(property "Reference" "USS1"
+		(property "Reference" "USSe"
 			(at 100.33 83.82 0)
 			(effects
 				(font
@@ -1047,7 +1047,7 @@
 		(instances
 			(project "PIG-19"
 				(path "/469e864f-3700-4a04-a1e1-a9f39f3c0d0e/6af7b4d3-4cb5-4844-83f3-c851284dca4a"
-					(reference "USS1")
+					(reference "USSe")
 					(unit 1)
 				)
 			)
