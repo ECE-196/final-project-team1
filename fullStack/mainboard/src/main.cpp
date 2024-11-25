@@ -13,6 +13,7 @@ IMUCalibration calibration;
 #define SCL_PIN 34
 #define CALIB_PIN 11  // Pin to trigger calibration
 #define OUTPUT_PIN 46 // Pin to output HIGH
+
 #define AUDIO_OUTPUT_PIN 14
 
 #define BNO08X_ADDR 0x4A  // SparkFun BNO08x Breakout (Qwiic) defaults to 0x4B
@@ -34,12 +35,13 @@ unsigned long previousDebugMillis = 0;
 void setup() {
   USBSerial.begin(115200);
   
-  while(!USBSerial) delay(10);
+  while (!USBSerial) delay(10);
   
   USBSerial.println();
-  USBSerial.println("BNO08x Read Example");
+  USBSerial.println("BNO08x Calibration Example");
 
   Wire.begin(SDA_PIN, SCL_PIN);
+
 
   if (myIMU.begin() == false) {  // Setup without INT/RST control (Not Recommended)
     if (myIMU.begin(BNO08X_ADDR, Wire, BNO08X_INT, BNO08X_RST) == false) {
@@ -49,84 +51,53 @@ void setup() {
 
   audioPlayer.begin();
 
-  USBSerial.println("Reading events");
-  delay(100);
+  if (myIMU.begin(BNO08X_ADDR, Wire, BNO08X_INT, BNO08X_RST) == false) {
+    USBSerial.println("BNO08x not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
+    while (1);
+  }
+
+  if (myIMU.enableRawAccelerometer(1) == false) {
+    USBSerial.println("Could not enable raw accelerometer");
+    while (1);
+  }
+
+  USBSerial.println("Waiting for calibration trigger...");
 }
 
-// Here is where you define the sensor outputs you want to receive
-void setReports(void) {
-  USBSerial.println("Setting desired reports");
+void calibrateAccelerometer() {
+  int samples = 100;
+  float sumX = 0.0, sumY = 0.0, sumZ = 0.0;
 
-  if (myIMU.enableAccelerometer(1) == true) {
-    USBSerial.println(F("Accelerometer enabled"));
-  } else {
-    USBSerial.println("Could not enable accelerometer");
+  USBSerial.println("Calibrating...");
+
+  for (int i = 0; i < samples; i++) {
+    while (!myIMU.getSensorEvent()) delay(1); // Wait for new sensor event
+    if (myIMU.getSensorEventID() == SENSOR_REPORTID_RAW_ACCELEROMETER) {
+      sumX += myIMU.getRawAccelX();
+      sumY += myIMU.getRawAccelY();
+      sumZ += myIMU.getRawAccelZ();
+    }
+    delay(10); // Small delay between readings
   }
 
-  if (myIMU.enableRawAccelerometer(1) == true) {
-    USBSerial.println(F("Raw Accelerometer enabled"));
-  } else {
-    USBSerial.println("Could not enable raw accelerometer");
-  }
+  accelXOffset = sumX / samples;
+  accelYOffset = sumY / samples;
+  accelZOffset = sumZ / samples - 9.8; // Adjust for gravity on Z-axis
 
-  if (myIMU.enableGyro(1) == true) {
-    USBSerial.println(F("Gyro enabled"));
-  } else {
-    USBSerial.println("Could not enable gyro");
-  }
-
-  if (myIMU.enableRawGyro(1) == true) {
-    USBSerial.println(F("Raw Gyro enabled"));
-  } else {
-    USBSerial.println("Could not enable raw gyro");
-  }
-
-  if (myIMU.enableMagnetometer(1) == true) {
-    USBSerial.println(F("Magnetometer enabled"));
-  } else {
-    USBSerial.println("Could not enable Magnetometer");
-  }
-
-  if (myIMU.enableRawMagnetometer(1) == true) {
-    USBSerial.println(F("Raw Magnetometer enabled"));
-  } else {
-    USBSerial.println("Could not enable Raw Magnetometer");
-  }
-
-  USBSerial.println(F("Raw MEMS readings enabled"));
-  USBSerial.println(F("Output is: (accel) x y z (gyro) x y z (mag) x y z"));
+  USBSerial.println("Calibration complete:");
+  USBSerial.print("X Offset: "); USBSerial.println(accelXOffset);
+  USBSerial.print("Y Offset: "); USBSerial.println(accelYOffset);
+  USBSerial.print("Z Offset: "); USBSerial.println(accelZOffset);
 }
 
 void loop() {
-  delayMicroseconds(10);
-
-  if (myIMU.wasReset()) {
-    USBSerial.print("sensor was reset ");
-    setReports();
+  // Check if the calibration pin is HIGH
+  if (digitalRead(CALIB_PIN) == HIGH) {
+    calibrateAccelerometer();
   }
 
-  // Has a new event come in on the Sensor Hub Bus?
-  if (myIMU.getSensorEvent() == true)
-  {
+  while (!myIMU.getSensorEvent()) delay(1); // Wait for new sensor event
 
-    // keep track of if we've recieved an updated value on any one of the
-    // reports we're looking for.
-    uint8_t reportID = myIMU.getSensorEventID();
-
-    switch (reportID) {
-        case SENSOR_REPORTID_RAW_ACCELEROMETER:
-            x = myIMU.getRawAccelX();
-            y = myIMU.getRawAccelY();
-            z = myIMU.getRawAccelZ();
-            break;
-        case SENSOR_REPORTID_RAW_GYROSCOPE:
-            gx = myIMU.getRawGyroX();
-            gy = myIMU.getRawGyroY();
-            gz = myIMU.getRawGyroZ();
-            break;
-        default:
-            break;
-    }
 
 
     int timeSinceLastUSBSerialPrint = (millis() - previousDebugMillis);
@@ -153,8 +124,20 @@ void loop() {
 
         previousDebugMillis = millis();
 
-    }
+
+    // Apply calibration offsets
+    float calibratedX = rawX - accelXOffset;
+    float calibratedY = rawY - accelYOffset;
+    float calibratedZ = rawZ - accelZOffset;
+
+    USBSerial.print("Calibrated Accel: ");
+    USBSerial.print(calibratedX); USBSerial.print("\t");
+    USBSerial.print(calibratedY); USBSerial.print("\t");
+    USBSerial.print(calibratedZ); USBSerial.println();
+
+    delay(500); // Update rate for calibrated readings
   }
+
 
 //   // if theft is detected, play the audio
 //   if(theftDetected){
@@ -162,3 +145,4 @@ void loop() {
 //   }
 audioPlayer.playWaveform();
 }
+
