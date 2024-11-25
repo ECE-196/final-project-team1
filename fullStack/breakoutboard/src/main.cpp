@@ -6,8 +6,8 @@ BNO08x myIMU;
 
 #define BNO08X_INT  35
 #define BNO08X_RST  -1
-#define SDA_PIN 33
-#define SCL_PIN 34
+#define SDA_PIN 6
+#define SCL_PIN 7
 
 #define BNO08X_ADDR 0x4A  // SparkFun BNO08x Breakout (Qwiic) defaults to 0x4B
 
@@ -26,75 +26,75 @@ unsigned long previousDebugMillis = 0;
 #define DEBUG_INTERVAL_MILLISECONDS 500
 
 void setup() {
-  USBSerial.begin(115200);
+  Serial.begin(115200);
   
-  while(!USBSerial) delay(10);
+  while(!Serial) delay(10);
   
-  USBSerial.println();
-  USBSerial.println("BNO08x Read Example");
+  Serial.println();
+  Serial.println("BNO08x Read Example");
 
   Wire.begin(SDA_PIN, SCL_PIN);
 
   if (myIMU.begin() == false) {  // Setup without INT/RST control (Not Recommended)
     if (myIMU.begin(BNO08X_ADDR, Wire, BNO08X_INT, BNO08X_RST) == false) {
-        USBSerial.println("BNO08x not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
+        Serial.println("BNO08x not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
     }
   }
 
 
-  USBSerial.println("Reading events");
+  Serial.println("Reading events");
   delay(100);
 }
 
 // Here is where you define the sensor outputs you want to receive
 void setReports(void) {
-  USBSerial.println("Setting desired reports");
+  Serial.println("Setting desired reports");
 
   if (myIMU.enableAccelerometer(1) == true) {
-    USBSerial.println(F("Accelerometer enabled"));
+    Serial.println(F("Accelerometer enabled"));
   } else {
-    USBSerial.println("Could not enable accelerometer");
+    Serial.println("Could not enable accelerometer");
   }
 
   if (myIMU.enableRawAccelerometer(1) == true) {
-    USBSerial.println(F("Raw Accelerometer enabled"));
+    Serial.println(F("Raw Accelerometer enabled"));
   } else {
-    USBSerial.println("Could not enable raw accelerometer");
+    Serial.println("Could not enable raw accelerometer");
   }
 
   if (myIMU.enableGyro(1) == true) {
-    USBSerial.println(F("Gyro enabled"));
+    Serial.println(F("Gyro enabled"));
   } else {
-    USBSerial.println("Could not enable gyro");
+    Serial.println("Could not enable gyro");
   }
 
   if (myIMU.enableRawGyro(1) == true) {
-    USBSerial.println(F("Raw Gyro enabled"));
+    Serial.println(F("Raw Gyro enabled"));
   } else {
-    USBSerial.println("Could not enable raw gyro");
+    Serial.println("Could not enable raw gyro");
   }
 
   if (myIMU.enableMagnetometer(1) == true) {
-    USBSerial.println(F("Magnetometer enabled"));
+    Serial.println(F("Magnetometer enabled"));
   } else {
-    USBSerial.println("Could not enable Magnetometer");
+    Serial.println("Could not enable Magnetometer");
   }
 
   if (myIMU.enableRawMagnetometer(1) == true) {
-    USBSerial.println(F("Raw Magnetometer enabled"));
+    Serial.println(F("Raw Magnetometer enabled"));
   } else {
-    USBSerial.println("Could not enable Raw Magnetometer");
+    Serial.println("Could not enable Raw Magnetometer");
   }
 
-  USBSerial.println(F("Raw MEMS readings enabled"));
-  USBSerial.println(F("Output is: (accel) x y z (gyro) x y z (mag) x y z"));
+  Serial.println(F("Raw MEMS readings enabled"));
+  Serial.println(F("Output is: (accel) x y z (gyro) x y z (mag) x y z"));
 }
 
 void loop() {
   delayMicroseconds(10);
 
   if (myIMU.wasReset()) {
-    USBSerial.print("sensor was reset ");
+    Serial.print("sensor was reset ");
     setReports();
   }
 
@@ -121,35 +121,28 @@ void loop() {
             break;
     }
 
-    // Only print data to the terminal at a user defined interval
-    // Each data type (accel or gyro or mag) is reported from the
-    // BNO086 as separate messages.
-    // To allow for all these separate messages to arrive, and thus
-    // have updated data on all axis/types, 
-    // The report intervals for each datatype must be much faster
-    // than our debug interval.
 
-    int timeSinceLastUSBSerialPrint = (millis() - previousDebugMillis);
+    int timeSinceLastSerialPrint = (millis() - previousDebugMillis);
 
     // Only print data to the terminal at a user deficed interval
-    if(timeSinceLastUSBSerialPrint > DEBUG_INTERVAL_MILLISECONDS)
+    if(timeSinceLastSerialPrint > DEBUG_INTERVAL_MILLISECONDS)
     {
-        USBSerial.print("Accel: ");
-        USBSerial.print(x);
-        USBSerial.print("\t");
-        USBSerial.print(y);
-        USBSerial.print("\t");
-        USBSerial.print(z);
-        USBSerial.println();
+        Serial.print("Accel: ");
+        Serial.print(x);
+        Serial.print("\t");
+        Serial.print(y);
+        Serial.print("\t");
+        Serial.print(z);
+        Serial.println();
 
-        USBSerial.print("Gyro: ");
-        USBSerial.print(gx);
-        USBSerial.print("\t");
-        USBSerial.print(gy);
-        USBSerial.print("\t");
-        USBSerial.print(gz);
-        USBSerial.println();
-        USBSerial.println("-------------------------------------------------------");
+        Serial.print("Gyro: ");
+        Serial.print(gx);
+        Serial.print("\t");
+        Serial.print(gy);
+        Serial.print("\t");
+        Serial.print(gz);
+        Serial.println();
+        Serial.println("-------------------------------------------------------");
 
         previousDebugMillis = millis();
 
