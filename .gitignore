@@ -26,4 +26,5 @@ fp-info-cache
 # Autorouter files (exported from Pcbnew)
 *.dsn
 *.ses
+*.json
 fullStack/mainboard/.vscode/extensions.json
