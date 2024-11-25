@@ -1,16 +1,22 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include "SparkFun_BNO08x_Arduino_Library.h" // CTRL+Click here to get the library: http://librarymanager/All#SparkFun_BNO08x
+#include "IMUCalibration.h"
+#include "PlayAudio.h"
 
 BNO08x myIMU;
+IMUCalibration calibration;
 
 #define BNO08X_INT  35
 #define BNO08X_RST  -1
 #define SDA_PIN 33
 #define SCL_PIN 34
+#define CALIB_PIN 11  // Pin to trigger calibration
+#define OUTPUT_PIN 46 // Pin to output HIGH
+#define AUDIO_OUTPUT_PIN 14
 
 #define BNO08X_ADDR 0x4A  // SparkFun BNO08x Breakout (Qwiic) defaults to 0x4B
-
+PlayAudio audioPlayer(AUDIO_OUTPUT_PIN,60000);
 // raw accel
 int16_t x;
 int16_t y;
@@ -41,6 +47,7 @@ void setup() {
     }
   }
 
+  audioPlayer.begin();
 
   USBSerial.println("Reading events");
   delay(100);
@@ -121,13 +128,6 @@ void loop() {
             break;
     }
 
-    // Only print data to the terminal at a user defined interval
-    // Each data type (accel or gyro or mag) is reported from the
-    // BNO086 as separate messages.
-    // To allow for all these separate messages to arrive, and thus
-    // have updated data on all axis/types, 
-    // The report intervals for each datatype must be much faster
-    // than our debug interval.
 
     int timeSinceLastUSBSerialPrint = (millis() - previousDebugMillis);
 
@@ -155,4 +155,10 @@ void loop() {
 
     }
   }
+
+//   // if theft is detected, play the audio
+//   if(theftDetected){
+//     audioPlayer.playWaveform();
+//   }
+audioPlayer.playWaveform();
 }
