@@ -1,0 +1,133 @@
+menu "ESP-NimBLE-CPP configuration"
+
+choice NIMBLE_CPP_LOG_LEVEL
+    prompt "NimBLE CPP log verbosity"
+    default NIMBLE_CPP_LOG_LEVEL_NONE
+    help
+        Select NimBLE CPP log verbosity level.
+
+    config NIMBLE_CPP_LOG_LEVEL_NONE
+        bool "No logs"
+    config NIMBLE_CPP_LOG_LEVEL_ERROR
+        bool "Error logs"
+    config NIMBLE_CPP_LOG_LEVEL_WARNING
+        bool "Warning logs"
+    config NIMBLE_CPP_LOG_LEVEL_INFO
+        bool "Info logs"
+    config NIMBLE_CPP_LOG_LEVEL_DEBUG
+        bool "Debug logs"
+endchoice #NIMBLE_CPP_LOG_LEVEL
+
+config NIMBLE_CPP_LOG_LEVEL
+    int
+    default 0 if NIMBLE_CPP_LOG_LEVEL_NONE
+    default 1 if NIMBLE_CPP_LOG_LEVEL_ERROR
+    default 2 if NIMBLE_CPP_LOG_LEVEL_WARNING
+    default 3 if NIMBLE_CPP_LOG_LEVEL_INFO
+    default 4 if NIMBLE_CPP_LOG_LEVEL_DEBUG
+
+config NIMBLE_CPP_ENABLE_RETURN_CODE_TEXT
+    bool "Show NimBLE return codes as text in debug log."
+    default "n"
+    help
+        Enabling this option will display return code values as text
+        messages in the debug log. This will use approximately 8kB
+        of flash memory.
+
+config NIMBLE_CPP_ENABLE_GAP_EVENT_CODE_TEXT
+    bool "Show NimBLE gap events as text in debug log."
+    default "n"
+    help
+        Enabling this option will display gap event codes as text
+        messages in the debug log. This will use approximately 1kB
+        of flash memory.
+
+config NIMBLE_CPP_ENABLE_ADVERTISEMENT_TYPE_TEXT
+    bool "Show advertisment types as text in debug log."
+    default "n"
+    help
+        Enabling this option will display advertisment types recieved
+        while scanning as text messages in the debug log.
+        This will use approximately 250 bytes of flash memory.
+
+config NIMBLE_CPP_ATT_VALUE_TIMESTAMP_ENABLED
+    bool "Enable timestamps to be stored with attribute values."
+    default "n"
+    help
+        Enabling this option will store the timestamp when an attribute value is updated.
+        This allows for checking the last update time using getTimeStamp()
+        or getValue(time_t*). If disabled, the timestamp returned from these functions will be 0.
+        Disabling timestamps will reduce the memory used for each value.
+
+config NIMBLE_CPP_ATT_VALUE_INIT_LENGTH
+    int "Initial attribute value size (bytes) for empty values."
+    range 1 512
+    default 20
+    help
+        Sets the default allocation size (bytes) for each attribute if not specified
+        when the constructor is called. This is also the size used when a remote
+        characteristic or descriptor is constructed before a value is read/notifed.
+        Increasing this will reduce reallocations but increase memory footprint.
+
+config NIMBLE_CPP_DEBUG_ASSERT_ENABLED
+    bool "Enable debug asserts."
+    default "n"
+    help
+        Enabling this option will add debug asserts to the NimBLE CPP library.
+        This will use approximately 1kB of flash memory.
+
+config NIMBLE_CPP_FREERTOS_TASK_BLOCK_BIT
+    int "FreeRTOS task block bit"
+    default 31
+    help
+        Configure the bit to set in the task notification value when a task is blocked waiting for an event.
+        This should be set to a bit that is not used by other notifications in the system.
+        
+#
+# BT config
+#
+config BT_ENABLED
+    bool "Bluetooth"
+    default "y"
+    help
+        Select this option to enable Bluetooth and show the submenu with Bluetooth configuration choices.
+
+
+config BT_NIMBLE_ENABLED
+    bool "NimBLE - BLE only"
+    default "y"
+    help
+        This option is recommended for BLE only usecases to save on memory
+
+if IDF_TARGET_ESP32P4
+
+    config BT_NIMBLE_TRANSPORT_UART
+        bool "Enable Uart Transport"
+        default "n"
+
+    #
+    # Enable ESP Hosted BT
+    # Used as VHCI transport between BT Host and Controller
+    #
+    config ESP_ENABLE_BT
+        bool "Enable Hosted Bluetooth support"
+        default "y"
+        help
+            Enable Bluetooth Support via Hosted
+
+    choice ESP_WIFI_REMOTE_LIBRARY
+        prompt "Choose WiFi-remote implementation"
+        default ESP_WIFI_REMOTE_LIBRARY_HOSTED
+        help
+            Select type of WiFi Remote implementation
+
+            ESP-HOSTED is the default and most versatile option.
+            It's also possible to use EPPP, which uses PPPoS link between micros and NAPT, so it's slower
+            and less universal.
+
+        config ESP_WIFI_REMOTE_LIBRARY_HOSTED
+            bool "ESP-HOSTED"
+    endchoice
+endif
+
+endmenu
