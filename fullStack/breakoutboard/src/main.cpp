@@ -4,7 +4,7 @@
 
 BNO08x myIMU;
 
-#define BNO08X_INT  35
+#define BNO08X_INT  -1
 #define BNO08X_RST  -1
 #define SDA_PIN 6
 #define SCL_PIN 7
