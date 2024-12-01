@@ -1,69 +1,50 @@
 #include "IMUCalibration.h"
+#include <Arduino.h>
 
-IMUCalibration::IMUCalibration() {
-    // Initialize buffers to 0
-    for (int i = 0; i < FILTER_SIZE; i++) {
-        accel_x_buffer[i] = 0;
-        accel_y_buffer[i] = 0;
-        accel_z_buffer[i] = 0;
-        gyro_x_buffer[i] = 0;
-        gyro_y_buffer[i] = 0;
-        gyro_z_buffer[i] = 0;
-    }
-}
-
-void IMUCalibration::calibrate(int16_t& ax, int16_t& ay, int16_t& az,
-                              int16_t& gx, int16_t& gy, int16_t& gz) {
+CalibrationOffsets IMUCalibration::calibrateIMU(BNO08x& imu) {
+    Serial.println("Starting IMU calibration. Keep the device still...");
+    
     long sum_ax = 0, sum_ay = 0, sum_az = 0;
     long sum_gx = 0, sum_gy = 0, sum_gz = 0;
-    
-    // Collect samples
-    for (int i = 0; i < CALIBRATION_SAMPLES; i++) {
-        sum_ax += ax;
-        sum_ay += ay;
-        sum_az += az;
-        sum_gx += gx;
-        sum_gy += gy;
-        sum_gz += gz;
-        delay(10); // Small delay between readings
-    }
-    
-    // Calculate average offsets
-    accel_offset_x = sum_ax / CALIBRATION_SAMPLES;
-    accel_offset_y = sum_ay / CALIBRATION_SAMPLES;
-    accel_offset_z = sum_az / CALIBRATION_SAMPLES;
-    gyro_offset_x = sum_gx / CALIBRATION_SAMPLES;
-    gyro_offset_y = sum_gy / CALIBRATION_SAMPLES;
-    gyro_offset_z = sum_gz / CALIBRATION_SAMPLES;
-}
+    int validSamples = 0;
+    CalibrationOffsets offsets = {0, 0, 0, 0, 0, 0};
 
-void IMUCalibration::processReadings(int16_t& ax, int16_t& ay, int16_t& az,
-                                   int16_t& gx, int16_t& gy, int16_t& gz) {
-    // Remove offsets
-    ax -= accel_offset_x;
-    ay -= accel_offset_y;
-    az -= accel_offset_z;
-    gx -= gyro_offset_x;
-    gy -= gyro_offset_y;
-    gz -= gyro_offset_z;
-    
-    // Apply moving average filter
-    ax = applyMovingAverage(ax, accel_x_buffer);
-    ay = applyMovingAverage(ay, accel_y_buffer);
-    az = applyMovingAverage(az, accel_z_buffer);
-    gx = applyMovingAverage(gx, gyro_x_buffer);
-    gy = applyMovingAverage(gy, gyro_y_buffer);
-    gz = applyMovingAverage(gz, gyro_z_buffer);
-}
-
-int16_t IMUCalibration::applyMovingAverage(int16_t newValue, int16_t* buffer) {
-    buffer[buffer_index] = newValue;
-    
-    long sum = 0;
-    for (int i = 0; i < FILTER_SIZE; i++) {
-        sum += buffer[i];
+    // Collect samples for 1 second
+    unsigned long startTime = millis();
+    while (millis() - startTime < 1000) {  // 1 second calibration
+        if (imu.getSensorEvent()) {
+            uint8_t reportID = imu.getSensorEventID();
+            
+            switch (reportID) {
+                case SENSOR_REPORTID_RAW_ACCELEROMETER:
+                    sum_ax += imu.getRawAccelX();
+                    sum_ay += imu.getRawAccelY();
+                    sum_az += imu.getRawAccelZ();
+                    break;
+                case SENSOR_REPORTID_RAW_GYROSCOPE:
+                    sum_gx += imu.getRawGyroX();
+                    sum_gy += imu.getRawGyroY();
+                    sum_gz += imu.getRawGyroZ();
+                    validSamples++;
+                    break;
+            }
+        }
+        delayMicroseconds(10);
     }
-    
-    buffer_index = (buffer_index + 1) % FILTER_SIZE;
-    return sum / FILTER_SIZE;
-} 
+
+    // Calculate and store offsets
+    if (validSamples > 0) {
+        offsets.accel_x = sum_ax / validSamples;
+        offsets.accel_y = sum_ay / validSamples;
+        offsets.accel_z = sum_az / validSamples;
+        offsets.gyro_x = sum_gx / validSamples;
+        offsets.gyro_y = sum_gy / validSamples;
+        offsets.gyro_z = sum_gz / validSamples;
+        
+        Serial.println("Calibration complete! Offsets:");
+        Serial.printf("Accel: X=%d, Y=%d, Z=%d\n", offsets.accel_x, offsets.accel_y, offsets.accel_z);
+        Serial.printf("Gyro: X=%d, Y=%d, Z=%d\n", offsets.gyro_x, offsets.gyro_y, offsets.gyro_z);
+    }
+
+    return offsets;
+}
