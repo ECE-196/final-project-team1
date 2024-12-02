@@ -6,45 +6,45 @@
 #include <BLEServer.h>
 #include <BLEUtils.h>
 
-// BNO08x myIMU;
-// #define BNO08X_INT  35
-// #define BNO08X_RST  -1
-// #define SDA_PIN 33
-// #define SCL_PIN 34
-// #define BNO08X_ADDR 0x4A  // SparkFun BNO08x Breakout (Qwiic) defaults to 0x4B
-// #define AUDIO_OUTPUT_PIN 14
+BNO08x myIMU;
+#define BNO08X_INT  35
+#define BNO08X_RST  -1
+#define SDA_PIN 33
+#define SCL_PIN 34
+#define BNO08X_ADDR 0x4A  // SparkFun BNO08x Breakout (Qwiic) defaults to 0x4B
+#define AUDIO_OUTPUT_PIN 21
 
-// // raw accel
-// int16_t x;
-// int16_t y;
-// int16_t z;
-// // raw gyros
-// int16_t gx;
-// int16_t gy;
-// int16_t gz;
-// unsigned long previousDebugMillis = 0;
-// #define DEBUG_INTERVAL_MILLISECONDS 500
-// PlayAudio audioplayer(AUDIO_OUTPUT_PIN,60000);
+// raw accel
+int16_t x;
+int16_t y;
+int16_t z;
+// raw gyros
+int16_t gx;
+int16_t gy;
+int16_t gz;
+unsigned long previousDebugMillis = 0;
+#define DEBUG_INTERVAL_MILLISECONDS 500
+PlayAudio audioplayer(AUDIO_OUTPUT_PIN,60000);
 
 
-// void setup() {
-//   USBSerial.begin(115200);
+void setup() {
+  USBSerial.begin(115200);
   
-//   while(!USBSerial) delay(10);
+  while(!USBSerial) delay(10);
   
-//   USBSerial.println();
-//   USBSerial.println("BNO08x Read Example");
-//   Wire.begin(SDA_PIN, SCL_PIN);
-//   if (myIMU.begin() == false) {  // Setup without INT/RST control (Not Recommended)
-//     if (myIMU.begin(BNO08X_ADDR, Wire, BNO08X_INT, BNO08X_RST) == false) {
-//         USBSerial.println("BNO08x not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
-//     }
-//   }
-//   USBSerial.println("Reading events");
-//   delay(100);
+  USBSerial.println();
+  USBSerial.println("BNO08x Read Example");
+  Wire.begin(SDA_PIN, SCL_PIN);
+  if (myIMU.begin() == false) {  // Setup without INT/RST control (Not Recommended)
+    if (myIMU.begin(BNO08X_ADDR, Wire, BNO08X_INT, BNO08X_RST) == false) {
+        USBSerial.println("BNO08x not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
+    }
+  }
+  USBSerial.println("Reading events");
+  delay(100);
 
-//   audioplayer.begin();
-// }
+  audioplayer.begin();
+}
 
 // // Here is where you define the sensor outputs you want to receive
 // void setReports(void) {
@@ -209,44 +209,44 @@ class MyCallbacks: public BLECharacteristicCallbacks {
     }
 };
 
-void setup() {
-    USBSerial.begin(115200);
-    while(!USBSerial) delay(100);
-    safePrint("Starting BLE Server...\n");
+// void setup() {
+//     USBSerial.begin(115200);
+//     while(!USBSerial) delay(100);
+//     safePrint("Starting BLE Server...\n");
 
-    // Create the BLE Device
-    BLEDevice::init("ESP32S3_BLE_Server");
+//     // Create the BLE Device
+//     BLEDevice::init("ESP32S3_BLE_Server");
 
-    // Create the BLE Server
-    BLEServer *pServer = BLEDevice::createServer();
-    pServer->setCallbacks(new MyServerCallbacks());
+//     // Create the BLE Server
+//     BLEServer *pServer = BLEDevice::createServer();
+//     pServer->setCallbacks(new MyServerCallbacks());
 
-    // Create the BLE Service
-    BLEService *pService = pServer->createService(SERVICE_UUID);
+//     // Create the BLE Service
+//     BLEService *pService = pServer->createService(SERVICE_UUID);
 
-    // Create a BLE Characteristic
-    pCharacteristic = pService->createCharacteristic(
-                        CHARACTERISTIC_UUID,
-                        BLECharacteristic::PROPERTY_READ |
-                        BLECharacteristic::PROPERTY_WRITE |
-                        BLECharacteristic::PROPERTY_NOTIFY
-                    );
+//     // Create a BLE Characteristic
+//     pCharacteristic = pService->createCharacteristic(
+//                         CHARACTERISTIC_UUID,
+//                         BLECharacteristic::PROPERTY_READ |
+//                         BLECharacteristic::PROPERTY_WRITE |
+//                         BLECharacteristic::PROPERTY_NOTIFY
+//                     );
 
-    pCharacteristic->setCallbacks(new MyCallbacks());
+//     pCharacteristic->setCallbacks(new MyCallbacks());
 
-    // Start the service
-    pService->start();
+//     // Start the service
+//     pService->start();
 
-    // Start advertising
-    BLEAdvertising *pAdvertising = pServer->getAdvertising();
-    pAdvertising->addServiceUUID(SERVICE_UUID);
-    pAdvertising->setScanResponse(true);
-    pAdvertising->setMinPreferred(0x06);
-    pAdvertising->setMinPreferred(0x12);
-    pAdvertising->start();
+//     // Start advertising
+//     BLEAdvertising *pAdvertising = pServer->getAdvertising();
+//     pAdvertising->addServiceUUID(SERVICE_UUID);
+//     pAdvertising->setScanResponse(true);
+//     pAdvertising->setMinPreferred(0x06);
+//     pAdvertising->setMinPreferred(0x12);
+//     pAdvertising->start();
 
-    safePrint("BLE Server is ready, waiting for client connection...\n");
-}
+//     safePrint("BLE Server is ready, waiting for client connection...\n");
+// }
 
 void loop() {
     delay(10);
