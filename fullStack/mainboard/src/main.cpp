@@ -1,6 +1,10 @@
 #include <Wire.h>
 #include <Arduino.h>
 #include "SparkFun_BNO08x_Arduino_Library.h" 
+#include "PlayAudio.h"
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
 
 BNO08x myIMU;
 
@@ -124,6 +128,83 @@ void setReports(void) {
   USBSerial.println(F("Output is: (accel) x y z (gyro) x y z (mag) x y z"));
 }
 
+// BLE PART
+BLECharacteristic *pCharacteristic;
+bool deviceConnected = false;
+
+// Message handling
+String messageBuffer = "";
+const char END_MARKER = '\n';
+portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+
+#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+// Safe print function
+void safePrint(const String& message) {
+    portENTER_CRITICAL(&mux);
+    USBSerial.print(message);
+    USBSerial.flush(); // Ensure complete transmission
+    portEXIT_CRITICAL(&mux);
+}
+
+// Add these helper functions
+void clearBuffer() {
+    portENTER_CRITICAL(&mux);
+    messageBuffer = "";
+    portEXIT_CRITICAL(&mux);
+}
+
+void appendToBuffer(const String& data) {
+    portENTER_CRITICAL(&mux);
+    messageBuffer += data;
+    portEXIT_CRITICAL(&mux);
+}
+
+class MyServerCallbacks: public BLEServerCallbacks {
+    void onConnect(BLEServer* pServer) {
+        deviceConnected = true;
+        clearBuffer();  // Clear buffer atomically
+        safePrint("Client Connected\n");
+    }
+
+    void onDisconnect(BLEServer* pServer) {
+        deviceConnected = false;
+        clearBuffer();  // Clear buffer atomically
+        safePrint("Client Disconnected\n");
+        pServer->getAdvertising()->start();
+    }
+};
+
+class MyCallbacks: public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+        std::string rxValue = pCharacteristic->getValue();
+        
+        if (rxValue.length() > 0) {
+            // Convert received data to String and append to buffer atomically
+            String receivedData = String(rxValue.c_str());
+            appendToBuffer(receivedData);
+            
+            portENTER_CRITICAL(&mux);
+            // Process complete messages
+            int endIndex;
+            while ((endIndex = messageBuffer.indexOf(END_MARKER)) != -1) {
+                // Extract complete message
+                String completeMessage = messageBuffer.substring(0, endIndex);
+                // Only keep unprocessed part
+                messageBuffer = messageBuffer.substring(endIndex + 1);
+                
+                // Print complete message while still in critical section
+                USBSerial.print("Received: ");
+                USBSerial.println(completeMessage);
+                USBSerial.flush();
+            }
+            portEXIT_CRITICAL(&mux);
+        }
+    }
+};
+
+
 void setup() {
   USBSerial.begin(115200);
 
@@ -147,6 +228,40 @@ void setup() {
   // Calibrate IMU and set offsets.
   offset_ax = offset_ay = offset_az = 0;
   offset_gx = offset_gy = offset_gz = 0;
+
+
+  // Create the BLE Device
+  BLEDevice::init("ESP32S3_BLE_Server");
+
+  // Create the BLE Server
+  BLEServer *pServer = BLEDevice::createServer();
+  pServer->setCallbacks(new MyServerCallbacks());
+
+  // Create the BLE Service
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+
+  // Create a BLE Characteristic
+  pCharacteristic = pService->createCharacteristic(
+                      CHARACTERISTIC_UUID,
+                      BLECharacteristic::PROPERTY_READ |
+                      BLECharacteristic::PROPERTY_WRITE |
+                      BLECharacteristic::PROPERTY_NOTIFY
+                  );
+
+  pCharacteristic->setCallbacks(new MyCallbacks());
+
+  // Start the service
+  pService->start();
+
+  // Start advertising
+  BLEAdvertising *pAdvertising = pServer->getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06);
+  pAdvertising->setMinPreferred(0x12);
+  pAdvertising->start();
+
+  USBSerial.println("BLE Server is ready, waiting for client connection...\n");
 }
 
 void loop() {
@@ -251,16 +366,16 @@ void loop() {
 
   // Print IMU data every 2 seconds
   unsigned long currentTime = millis();
-  if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
-    printLocation();
+  // if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
+  //   printLocation();
 
-    // Debug info (optional)
-    USBSerial.println("Motion Data:");
-    USBSerial.printf("Acceleration (m/s²) - X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
-    USBSerial.printf("Velocity (m/s) - X: %.3f, Y: %.3f, Z: %.3f\n", vel_x, vel_y, vel_z);
+  //   // Debug info (optional)
+  //   USBSerial.println("Motion Data:");
+  //   USBSerial.printf("Acceleration (m/s²) - X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
+  //   USBSerial.printf("Velocity (m/s) - X: %.3f, Y: %.3f, Z: %.3f\n", vel_x, vel_y, vel_z);
 
-    lastPrintTime = currentTime;
-  }
+  //   lastPrintTime = currentTime;
+  // }
 
   // Add this after velocity calculations
   // Zero velocity when acceleration is near zero for a period

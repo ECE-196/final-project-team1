@@ -346,30 +346,6 @@ void loop() {
       }
   }
 
-  //BLE data sending
-  if (doConnect) {
-    if (connectToServer()) {
-      Serial.println("Connected to the BLE Server.");
-    } else {
-      Serial.println("Failed to connect to the server; restarting scan.");
-      BLEDevice::getScan()->start(0);
-    }
-    doConnect = false;
-  }
-
-  if (connected) {
-    char message[150];
-    snprintf(message, sizeof(message), "POS:%.3f,%.3f,%.3f|ACC:%.3f,%.3f,%.3f\n", 
-            pos_x, pos_y, pos_z,
-            acc_x, acc_y, acc_z);
-    pRemoteCharacteristic->writeValue(message, strlen(message));
-    
-    Serial.print("Sent data: ");
-    Serial.print(message);
-    
-    delay(100);
-  }
-
   // Print IMU data every 2 seconds
   unsigned long currentTime = millis();
   if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
@@ -398,4 +374,30 @@ void loop() {
   } else {
       zero_acceleration_count = 0;
   }
+
+  //BLE data sending
+  if (doConnect) {
+    if (connectToServer()) {
+      Serial.println("Connected to the BLE Server.");
+    } else {
+      Serial.println("Failed to connect to the server; restarting scan.");
+      BLEDevice::getScan()->start(0);
+    }
+    doConnect = false;
+  }
+
+  if (connected) {
+    char message[150];
+    snprintf(message, sizeof(message), "POS:%.3f,%.3f,%.3f|ACC:%.3f,%.3f,%.3f\n", 
+            pos_x, pos_y, pos_z,
+            acc_x, acc_y, acc_z);
+    pRemoteCharacteristic->writeValue(message, strlen(message));
+    
+    // Serial.print("Sent data: ");
+    // Serial.print(message);
+    
+    delay(100);
+  }
+
+  
 }
