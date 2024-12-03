@@ -78,63 +78,51 @@ float roll = 0.0f, pitch = 0.0f, yaw = 0.0f;
 const float GYRO_SCALE = 1.0f / 16.0f;  // Adjust for your IMU
 const float COMP_FILTER_ALPHA = 0.96f;
 
-// void setup() {
-//   Serial.begin(115200);
-  
-//   while(!Serial) delay(10);
-  
-//   Serial.println();
-//   Serial.println("BNO08x Read Example");
-
-//   Wire.begin(SDA_PIN, SCL_PIN);
-
-//   if (myIMU.begin() == false) {  // Setup without INT/RST control (Not Recommended)
-//     if (myIMU.begin(BNO08X_ADDR, Wire, BNO08X_INT, BNO08X_RST) == false) {
-//         Serial.println("BNO08x not detected at default I2C address. Check your jumpers and the hookup guide. Freezing...");
-//     }
-//   }
-
-
-//   Serial.println("Reading events");
-//   delay(100);
-// }
+// Add this function at the top with other functions
+void printLocation() {
+    Serial.println("\n==== Current Device Location ====");
+    Serial.printf("X Position: %.3f meters\n", pos_x);
+    Serial.printf("Y Position: %.3f meters\n", pos_y);
+    Serial.printf("Z Position: %.3f meters\n", pos_z);
+    Serial.println("===============================\n");
+}
 
 // Here is where you define the sensor outputs you want to receive
 void setReports(void) {
   Serial.println("Setting desired reports");
 
-  if (myIMU.enableAccelerometer(1) == true) {
-    Serial.println(F("Accelerometer enabled"));
+  if (myIMU.enableAccelerometer(10) == true) {
+    Serial.println(F("Accelerometer enabled at 100Hz"));
   } else {
     Serial.println("Could not enable accelerometer");
   }
 
-  if (myIMU.enableRawAccelerometer(1) == true) {
-    Serial.println(F("Raw Accelerometer enabled"));
+  if (myIMU.enableRawAccelerometer(10) == true) {
+    Serial.println(F("Raw Accelerometer enabled at 100Hz"));
   } else {
     Serial.println("Could not enable raw accelerometer");
   }
 
-  if (myIMU.enableGyro(1) == true) {
-    Serial.println(F("Gyro enabled"));
+  if (myIMU.enableGyro(10) == true) {
+    Serial.println(F("Gyro enabled at 100Hz"));
   } else {
     Serial.println("Could not enable gyro");
   }
 
-  if (myIMU.enableRawGyro(1) == true) {
-    Serial.println(F("Raw Gyro enabled"));
+  if (myIMU.enableRawGyro(10) == true) {
+    Serial.println(F("Raw Gyro enabled at 100Hz"));
   } else {
     Serial.println("Could not enable raw gyro");
   }
 
-  if (myIMU.enableMagnetometer(1) == true) {
-    Serial.println(F("Magnetometer enabled"));
+  if (myIMU.enableMagnetometer(10) == true) {
+    Serial.println(F("Magnetometer enabled at 100Hz"));
   } else {
     Serial.println("Could not enable Magnetometer");
   }
 
-  if (myIMU.enableRawMagnetometer(1) == true) {
-    Serial.println(F("Raw Magnetometer enabled"));
+  if (myIMU.enableRawMagnetometer(10) == true) {
+    Serial.println(F("Raw Magnetometer enabled at 100Hz"));
   } else {
     Serial.println("Could not enable Raw Magnetometer");
   }
@@ -262,59 +250,6 @@ void loop() {
     setReports();
   }
 
-  if (isCalibrating) {
-    if (sampleCounter == 0) {
-      Serial.println("Starting warmup period...");
-    }
-    
-    if (myIMU.getSensorEvent()) {
-      uint8_t reportID = myIMU.getSensorEventID();
-      sampleCounter++;
-
-      if (sampleCounter <= WARMUP_SAMPLES) {
-        // Skip these samples
-        if (sampleCounter == WARMUP_SAMPLES) {
-          Serial.println("Warmup complete. Starting calibration...");
-        }
-        return;
-      }
-
-      // Only collect samples after warmup period
-      if (sampleCounter <= (WARMUP_SAMPLES + CALIBRATION_SAMPLES)) {
-        switch (reportID) {
-          case SENSOR_REPORTID_RAW_ACCELEROMETER:
-            sumAX += myIMU.getRawAccelX();
-            sumAY += myIMU.getRawAccelY();
-            sumAZ += myIMU.getRawAccelZ();
-            //Serial.printf("Accel offsets: X=%d, Y=%d, Z=%d\n", sumAX, sumAY, sumAZ);
-            accSample++;
-            break;
-          case SENSOR_REPORTID_RAW_GYROSCOPE:
-            sumGX += myIMU.getRawGyroX();
-            sumGY += myIMU.getRawGyroY();
-            sumGZ += myIMU.getRawGyroZ();
-            gyroSample++;
-            break;
-        }
-
-        if (sampleCounter == (WARMUP_SAMPLES + CALIBRATION_SAMPLES)) {
-          // Calculate offsets
-          offset_ax = sumAX / accSample;
-          offset_ay = sumAY / accSample;
-          offset_az = sumAZ / accSample;
-          offset_gx = sumGX / gyroSample;
-          offset_gy = sumGY / gyroSample;
-          offset_gz = sumGZ / gyroSample;
-
-          Serial.println("Calibration complete!");
-          Serial.printf("Accel offsets: X=%d, Y=%d, Z=%d\n", offset_ax, offset_ay, offset_az);
-          Serial.printf("Gyro offsets: X=%d, Y=%d, Z=%d\n", offset_gx, offset_gy, offset_gz);
-          
-          isCalibrating = false;
-        }
-      }
-    }
-  } else {
     // Normal operation - apply calibration offsets
     if (myIMU.getSensorEvent()) {
       uint8_t reportID = myIMU.getSensorEventID();
@@ -371,20 +306,8 @@ void loop() {
           pos_z += vel_z * dt;
 
           lastUpdateTime = currentTime;
-
-          // Print position every 2 seconds
-          // if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
-          //   Serial.println("Position (meters):");
-          //   Serial.printf("X: %.3f, Y: %.3f, Z: %.3f\n", pos_x, pos_y, pos_z);
-          //   Serial.println("Linear Acceleration (m/s^2):");
-          //   Serial.printf("X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
-          //   Serial.println("Gravity Vector:");
-          //   Serial.printf("X: %.3f, Y: %.3f, Z: %.3f\n", gravity_x, gravity_y, gravity_z);
-          //   Serial.println("--------------------");
-            
-          //   lastPrintTime = currentTime;
-          // }
           break;
+          
         case SENSOR_REPORTID_RAW_GYROSCOPE: {
           gx = (myIMU.getRawGyroX() - offset_gx) * GYRO_SCALE;
           gy = (myIMU.getRawGyroY() - offset_gy) * GYRO_SCALE;
@@ -421,7 +344,6 @@ void loop() {
         // default:
         //   break;
       }
-    }
   }
 
   //BLE data sending
@@ -450,26 +372,16 @@ void loop() {
 
   // Print IMU data every 2 seconds
   unsigned long currentTime = millis();
-  // if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
-  //   Serial.println("IMU Readings:");
-  //   Serial.printf("Accelerometer (x,y,z): %d, %d, %d\n", x, y, z);
-  //   Serial.printf("Gyroscope (x,y,z): %d, %d, %d\n", gx, gy, gz);
-  //   Serial.printf("calibrated (x,y,z): %d, %d, %d\n", offset_ax, offset_ay, offset_az);
-  //   Serial.println("--------------------");
+  if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
+    printLocation();
     
-  //   lastPrintTime = currentTime;
-  // }
-  // if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
-  //           Serial.println("Position (meters):");
-  //           Serial.printf("X: %.3f, Y: %.3f, Z: %.3f\n", pos_x, pos_y, pos_z);
-  //           Serial.println("Linear Acceleration (m/s^2):");
-  //           Serial.printf("X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
-  //           Serial.println("Gravity Vector:");
-  //           Serial.printf("X: %.3f, Y: %.3f, Z: %.3f\n", gravity_x, gravity_y, gravity_z);
-  //           Serial.println("--------------------");
-            
-  //           lastPrintTime = currentTime;
-  //         }
+    // Debug info (optional)
+    Serial.println("Motion Data:");
+    Serial.printf("Acceleration (m/s²) - X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
+    Serial.printf("Velocity (m/s) - X: %.3f, Y: %.3f, Z: %.3f\n", vel_x, vel_y, vel_z);
+    
+    lastPrintTime = currentTime;
+  }
 
   // Add this after velocity calculations
   // Zero velocity when acceleration is near zero for a period
