@@ -366,16 +366,16 @@ void loop() {
 
   // Print IMU data every 2 seconds
   unsigned long currentTime = millis();
-  // if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
-  //   printLocation();
+  if (currentTime - lastPrintTime >= PRINT_INTERVAL) {
+    printLocation();
 
-  //   // Debug info (optional)
-  //   USBSerial.println("Motion Data:");
-  //   USBSerial.printf("Acceleration (m/s²) - X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
-  //   USBSerial.printf("Velocity (m/s) - X: %.3f, Y: %.3f, Z: %.3f\n", vel_x, vel_y, vel_z);
+    // Debug info (optional)
+    USBSerial.println("Motion Data:");
+    USBSerial.printf("Acceleration (m/s²) - X: %.3f, Y: %.3f, Z: %.3f\n", acc_x, acc_y, acc_z);
+    USBSerial.printf("Velocity (m/s) - X: %.3f, Y: %.3f, Z: %.3f\n", vel_x, vel_y, vel_z);
 
-  //   lastPrintTime = currentTime;
-  // }
+    lastPrintTime = currentTime;
+  }
 
   // Add this after velocity calculations
   // Zero velocity when acceleration is near zero for a period
