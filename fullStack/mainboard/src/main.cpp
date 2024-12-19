@@ -75,6 +75,22 @@ float roll = 0.0f, pitch = 0.0f, yaw = 0.0f;
 const float GYRO_SCALE = 1.0f / 16.0f;  // Adjust for your IMU
 const float COMP_FILTER_ALPHA = 0.96f;
 
+// Add with other global variables
+float displacement = 0.0f;
+const float DISPLACEMENT_THRESHOLD = 0.5f;  // 0.5 meters
+int audioPlayCount = 0;
+const int MAX_AUDIO_PLAYS = 5;
+bool audioTriggered = false;
+
+// Add with other global variables
+const unsigned long WARMUP_TIME = 30000;  // 30 seconds in milliseconds
+unsigned long startTime = 0;
+bool warmupComplete = false;
+
+// Add with other global variables
+const unsigned long RESET_INTERVAL = 300000;  // 5 minutes in milliseconds
+unsigned long lastResetTime = 0;
+
 // Add this function at the top with other functions
 void printLocation() {
     USBSerial.println("\n==== Current Device Location ====");
@@ -82,6 +98,18 @@ void printLocation() {
     USBSerial.printf("Y Position: %.3f meters\n", pos_y);
     USBSerial.printf("Z Position: %.3f meters\n", pos_z);
     USBSerial.println("===============================\n");
+}
+
+// Add this function after printLocation()
+void resetDisplacement() {
+    pos_x = 0.0f;
+    pos_y = 0.0f;
+    pos_z = 0.0f;
+    vel_x = 0.0f;
+    vel_y = 0.0f;
+    vel_z = 0.0f;
+    displacement = 0.0f;
+    lastResetTime = millis();
 }
 
 // Here is where you define the sensor outputs you want to receive
@@ -262,6 +290,10 @@ void setup() {
   pAdvertising->start();
 
   USBSerial.println("BLE Server is ready, waiting for client connection...\n");
+
+  // Add with other global variables
+  startTime = millis();
+  lastResetTime = millis();
 }
 
 void loop() {
@@ -275,6 +307,11 @@ void loop() {
     uint8_t reportID = myIMU.getSensorEventID();
     unsigned long currentTime = millis();
     float dt = (currentTime - lastUpdateTime) / 1000.0f; // Convert to seconds
+
+    if (currentTime - lastResetTime >= RESET_INTERVAL) {
+        resetDisplacement();
+        USBSerial.println("Displacement values reset (5-minute interval)");
+    }
 
     switch (reportID) {
       case SENSOR_REPORTID_RAW_ACCELEROMETER:
@@ -325,7 +362,26 @@ void loop() {
         pos_y += vel_y * dt;
         pos_z += vel_z * dt;
 
+        displacement = sqrt(pos_x * pos_x + pos_y * pos_y + pos_z * pos_z);
+
         lastUpdateTime = currentTime;
+
+        if (displacement > DISPLACEMENT_THRESHOLD && !audioTriggered && audioPlayCount < MAX_AUDIO_PLAYS) {
+            if (!warmupComplete) {
+                if (millis() - startTime >= WARMUP_TIME) {
+                    warmupComplete = true;
+                }
+            } else {
+                PlayAudio audio(21, 60000);
+                audio.begin();
+                audio.playWaveform();
+                audioPlayCount++;
+                
+                if (audioPlayCount >= MAX_AUDIO_PLAYS) {
+                    audioTriggered = true;
+                }
+            }
+        }
         break;
 
       case SENSOR_REPORTID_RAW_GYROSCOPE: {
