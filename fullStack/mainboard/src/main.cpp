@@ -97,6 +97,7 @@ void printLocation() {
     USBSerial.printf("X Position: %.3f meters\n", pos_x);
     USBSerial.printf("Y Position: %.3f meters\n", pos_y);
     USBSerial.printf("Z Position: %.3f meters\n", pos_z);
+    //USBSerial.printf("displacement: %.3f meters\n", displacement);
     USBSerial.println("===============================\n");
 }
 
